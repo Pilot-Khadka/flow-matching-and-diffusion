@@ -1,7 +1,4 @@
-from typing import Optional
-
 import torch
-import seaborn as sns
 import matplotlib.pyplot as plt
 
 from processes.brownian import BrownianMotion
