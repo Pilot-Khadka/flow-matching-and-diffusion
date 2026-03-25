@@ -1,6 +1,6 @@
 import torch
 
-from diff_eqn.sde import SDE
+from equations.sde import SDE
 
 
 class BrownianMotion(SDE):

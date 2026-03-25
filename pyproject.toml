@@ -15,7 +15,56 @@ dependencies = [
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 
+[tool.pydocstyle]
+convention = "numpy"
+
 [dependency-groups]
 dev = [
     "pyrefly>=0.57.1",
 ]
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    "tests/",
+]
+line-length = 88
+indent-width = 4
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "PL"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+
