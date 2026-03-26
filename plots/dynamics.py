@@ -12,9 +12,8 @@ from integrators.euler_maruyama import EulerMaruyamaSimulator
 
 
 def every_nth_index(num_timesteps: int, n: int) -> torch.Tensor:
-    """
-    Compute the indices to record in the trajectory given a record_every parameter
-    """
+    """Compute the indices to record in the trajectory given a record_every
+    parameter."""
     if n == 1:
         return torch.arange(num_timesteps)
     return torch.cat(
@@ -37,16 +36,17 @@ def graph_dynamics(
     device: torch.device,
 ):
     """
-    Plot the evolution of samples from source under the simulation scheme given by simulator (itself a discretization of an ODE or SDE).
-    Args:
-        - num_samples: the number of samples to simulate
-        - source_distribution: distribution from which we draw initial samples at t=0
-        - simulator: the discertized simulation scheme used to simulate the dynamics
-        - density: the target density
-        - timesteps: the timesteps used by the simulator
-        - plot_every: number of timesteps between consecutive plots
-        - bins: number of bins for imshow
-        - scale: scale for imshow
+    Plot the evolution of samples from source under the simulation scheme
+    given by simulator (itself a discretization of an ODE or SDE).
+
+    num_samples: the number of samples to simulate
+    source_distribution: distribution from which we draw initial samples at t=0
+    simulator: the discertized simulation scheme used to simulate the dynamics
+    density: the target density
+    timesteps: the timesteps used by the simulator
+    plot_every: number of timesteps between consecutive plots
+    bins: number of bins for imshow
+    scale: scale for imshow
     """
     # Simulate
     x0 = source_distribution.sample(num_samples)
@@ -116,7 +116,6 @@ def graph_dynamics(
 
 
 def main():
-
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     target = GaussianMixture.random_2D(nmodes=5, std=0.75, scale=15.0, seed=3.0).to(
         device

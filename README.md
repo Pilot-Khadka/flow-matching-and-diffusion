@@ -1,15 +1,10 @@
 ## **flow-matching-and-diffusion**
 
-<table border="0"><tr>
-<td width="60%" valign="top">
-
 A minimal implementation of the two continuous-time generative models: **flow matching** and **diffusion models**.
 
-</td>
-<td width="40%" valign="middle">
-<img src="assets/brownian_motion.gif" alt="Brownian motion trajectories converging to a Gaussian"/>
-</td>
-</tr></table>
+<center>
+<img src="assets/langevin.gif" alt="Brownian motion trajectories converging to a Gaussian"/>
+</center>
 
 ### **installation**
 First install **PyTorch** appropriate for your system. Check your CUDA version with `nvidia-smi`, then:

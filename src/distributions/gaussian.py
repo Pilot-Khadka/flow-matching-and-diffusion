@@ -81,7 +81,11 @@ class GaussianMixture(torch.nn.Module, Sampleable, Density):
 
     @classmethod
     def random_2D(
-        cls, nmodes: int, std: float, scale: float = 10.0, seed=0.0
+        cls,
+        nmodes: int,
+        std: float,
+        scale: float = 10.0,
+        seed=0.0,
     ) -> "GaussianMixture":
         torch.manual_seed(seed)
         means = (torch.rand(nmodes, 2) - 0.5) * scale
