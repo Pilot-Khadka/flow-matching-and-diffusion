@@ -7,7 +7,9 @@ requires-python = ">=3.10"
 dependencies = [
     "matplotlib>=3.10.8",
     "numpy>=2.2.6",
+    "pydocstringformatter>=0.7.5",
     "pyglet>=2.1.13",
+    "pytest>=9.0.2",
     "seaborn>=0.13.2",
     "tqdm>=4.67.3",
 ]
@@ -67,4 +69,6 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
-
+[tool.pydocstringformatter]
+write = true
+exclude = ["**/tests/**"]

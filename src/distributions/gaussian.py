@@ -6,13 +6,16 @@ from .base import Sampleable, Density
 
 
 class Gaussian(torch.nn.Module, Sampleable, Density):
-    """
-    Two-dimensional Gaussian. Is a Density and a Sampleable. Wrapper around torch.distributions.MultivariateNormal
+    """Two-dimensional Gaussian.
+
+    Is a Density and a Sampleable. Wrapper around
+    torch.distributions.MultivariateNormal
     """
 
     def __init__(self, mean, cov):
         """
-        mean: shape (2,)
+        Mean: shape (2,).
+
         cov: shape (2,2)
         """
         super().__init__()
@@ -20,6 +23,10 @@ class Gaussian(torch.nn.Module, Sampleable, Density):
         self.cov: torch.Tensor
         self.register_buffer("mean", mean)
         self.register_buffer("cov", cov)
+
+    @property
+    def dim(self) -> int:
+        return self.mean.shape[0]
 
     @property
     def distribution(self):
@@ -31,10 +38,19 @@ class Gaussian(torch.nn.Module, Sampleable, Density):
     def log_density(self, x: torch.Tensor):
         return self.distribution.log_prob(x).view(-1, 1)
 
+    @classmethod
+    def isotropic(cls, dim: int, std: float) -> "Gaussian":
+        mean = torch.zeros(dim)
+        cov = torch.eye(dim) * std**2
+        return cls(mean, cov)
+
 
 class GaussianMixture(torch.nn.Module, Sampleable, Density):
-    """
-    Two-dimensional Gaussian mixture model, and is a Density and a Sampleable. Wrapper around torch.distributions.MixtureSameFamily.
+    """Two-dimensional Gaussian mixture model, and is a Density and a.
+
+    Sampleable.
+
+    Wrapper around torch.distributions.MixtureSameFamily.
     """
 
     def __init__(
@@ -44,7 +60,8 @@ class GaussianMixture(torch.nn.Module, Sampleable, Density):
         weights: torch.Tensor,  # nmodes
     ):
         """
-        means: shape (nmodes, 2)
+        Means: shape (nmodes, 2).
+
         covs: shape (nmodes, 2, 2)
         weights: shape (nmodes, 1)
         """

@@ -68,7 +68,10 @@ def _make_layouts(n: int) -> list[PanelLayout]:
 
 @dataclass
 class SimulationData:
-    """Pre-computed trajectory data for any SDE. Decoupled from visualization."""
+    """Pre-computed trajectory data for any SDE.
+
+    Decoupled from visualization.
+    """
 
     trajs: np.ndarray  # (n_traj, n_steps)
     ts: np.ndarray  # (n_steps,)
@@ -96,8 +99,9 @@ class SimulationData:
 
 
 class SDEVisualizer:
-    """
-    Pyglet-based animator for one or more SDE simulations rendered side by side.
+    """Pyglet-based animator for one or more SDE simulations rendered side by.
+
+    side.
 
     Trajectories are added to all panels in lock-step: one per panel per clock
     tick. This lets the user compare how different processes build up their

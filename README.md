@@ -25,5 +25,6 @@ uv sync && source .venv/bin/activate
 
 ### references:
 * [MIT 6.S184: Flow Matching and Diffusion Models](https://diffusion.csail.mit.edu/2026/index.html)
-
+* [Neural Ordinary Differential Equations](https://arxiv.org/pdf/1806.07366)
+* [Flow matching for generative modeling](https://arxiv.org/pdf/2210.02747)
 

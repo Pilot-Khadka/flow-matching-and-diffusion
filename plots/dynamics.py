@@ -12,8 +12,10 @@ from integrators.euler_maruyama import EulerMaruyamaSimulator
 
 
 def every_nth_index(num_timesteps: int, n: int) -> torch.Tensor:
-    """Compute the indices to record in the trajectory given a record_every
-    parameter."""
+    """Compute the indices to record in the trajectory given a record_every.
+
+    parameter.
+    """
     if n == 1:
         return torch.arange(num_timesteps)
     return torch.cat(
@@ -35,8 +37,8 @@ def graph_dynamics(
     scale: float,
     device: torch.device,
 ):
-    """
-    Plot the evolution of samples from source under the simulation scheme
+    """Plot the evolution of samples from source under the simulation scheme.
+
     given by simulator (itself a discretization of an ODE or SDE).
 
     num_samples: the number of samples to simulate
