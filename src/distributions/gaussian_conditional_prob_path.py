@@ -60,6 +60,7 @@ class GaussianConditionalProbabilityPath(ConditionalProbabilityPath):
         alpha_dt = self.alpha.dt(t)
         beta_dt = self.beta.dt(t)
         mean = alpha_t * z
+        # return alpha_dt * z + (beta_dt / beta_t) * (x - mean)
         return alpha_dt * z + (beta_dt / beta_t) * (x - mean)
 
     def conditional_score(
@@ -80,5 +81,4 @@ class GaussianConditionalProbabilityPath(ConditionalProbabilityPath):
         alpha_t = self.alpha(t)
         beta_t = self.beta(t)
         mean = alpha_t * z
-
         return -(x - mean) / (beta_t**2)

@@ -8,6 +8,7 @@ class EulerMaruyamaSimulator(Simulator):
     def __init__(self, sde: SDE):
         self.sde = sde
 
+    # pyrefly: ignore [bad-override]
     def step(self, xt: torch.Tensor, t: torch.Tensor, dt: torch.Tensor):
         drift = self.sde.drift_coefficient(xt=xt, t=t)
         diffusion = self.sde.diffusion_coefficient(xt=xt, t=t)

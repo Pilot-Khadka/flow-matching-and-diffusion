@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import torch
 import matplotlib.pyplot as plt
 
@@ -8,73 +10,42 @@ from distributions.gaussian_conditional_prob_path import (
 from distributions.base import LinearAlpha, SquareRootBeta
 from utils.plot import imshow_density
 
-PARAMS = {
-    "scale": 15.0,
-    "target_scale": 10.0,
-    "target_std": 1.0,
-}
+
+@dataclass(frozen=True)
+class Config:
+    scale: float = 15.0
+    target_scale: float = 10.0
+    target_std: float = 1.0
+    n_modes: int = 5
+    n_timesteps: int = 7
+    n_samples: int = 1000
+    density_bins: int = 200
 
 
-def main():
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-
+def build_distributions(cfg: Config, device: torch.device):
     p_simple = Gaussian.isotropic(dim=2, std=1.0).to(device)
     p_data = GaussianMixture.symmetric_2D(
-        nmodes=5, std=PARAMS["target_std"], scale=PARAMS["target_scale"]
+        nmodes=cfg.n_modes, std=cfg.target_std, scale=cfg.target_scale
     ).to(device)
-    # Construct conditional probability path
     path = GaussianConditionalProbabilityPath(
-        p_data=GaussianMixture.symmetric_2D(
-            nmodes=5, std=PARAMS["target_std"], scale=PARAMS["target_scale"]
-        ).to(device),
-        alpha=LinearAlpha(),
-        beta=SquareRootBeta(),
+        p_data=p_data, alpha=LinearAlpha(), beta=SquareRootBeta()
     ).to(device)
+    return p_simple, p_data, path
 
-    scale = PARAMS["scale"]
-    x_bounds = [-scale, scale]
-    y_bounds = [-scale, scale]
 
-    plt.figure(figsize=(10, 10))
-    plt.xlim(*x_bounds)
-    plt.ylim(*y_bounds)
-    plt.title("Gaussian Conditional Probability Path")
+def plot_marginals(p_simple, p_data, scale: float, device: torch.device):
+    shared = dict(bins=200, vmin=-10, alpha=0.25, device=device, scale=scale)
+    imshow_density(density=p_simple, cmap=plt.get_cmap("Reds"), **shared)
+    imshow_density(density=p_data, cmap=plt.get_cmap("Blues"), **shared)
 
-    # Plot source and target
-    imshow_density(
-        density=p_simple,
-        bins=200,
-        vmin=-10,
-        alpha=0.25,
-        cmap=plt.get_cmap("Reds"),
-        device=device,
-        scale=scale,
-    )
-    imshow_density(
-        density=p_data,
-        bins=200,
-        vmin=-10,
-        alpha=0.25,
-        cmap=plt.get_cmap("Blues"),
-        device=device,
-        scale=scale,
-    )
 
-    # Sample conditioning variable z
-    z = path.sample_conditioning_variable(1)  # (1,2)
-    ts = torch.linspace(0.0, 1.0, 7).to(device)
-
-    # Plot z
+def plot_conditional_path(path, z: torch.Tensor, ts: torch.Tensor, n_samples: int):
     plt.scatter(z[:, 0].cpu(), z[:, 1].cpu(), marker="*", color="red", s=75, label="z")
-    plt.xticks([])
-    plt.yticks([])
 
-    # Plot conditional probability path at each intermediate t
-    num_samples = 1000
     for t in ts:
-        zz = z.expand(num_samples, 2)
-        tt = t.unsqueeze(0).expand(num_samples, 1)  # (samples, 1)
-        samples = path.sample_conditional_path(zz, tt)  # (samples, 2)
+        zz = z.expand(n_samples, -1)
+        tt = t.expand(n_samples, 1)
+        samples = path.sample_conditional_path(zz, tt)
         plt.scatter(
             samples[:, 0].cpu(),
             samples[:, 1].cpu(),
@@ -82,6 +53,25 @@ def main():
             s=8,
             label=f"t={t.item():.1f}",
         )
+
+
+def main():
+    cfg = Config()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    p_simple, p_data, path = build_distributions(cfg, device)
+
+    z = path.sample_conditioning_variable(1).to(device)
+    ts = torch.linspace(0.0, 1.0, cfg.n_timesteps, device=device).unsqueeze(-1)
+
+    bounds = [-cfg.scale, cfg.scale]
+    _, ax = plt.subplots(figsize=(10, 10))
+    ax.set(xlim=bounds, ylim=bounds, title="Gaussian Conditional Probability Path")
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    plot_marginals(p_simple, p_data, cfg.scale, device)
+    plot_conditional_path(path, z, ts, cfg.n_samples)
 
     plt.legend(prop={"size": 18}, markerscale=3)
     plt.show()
