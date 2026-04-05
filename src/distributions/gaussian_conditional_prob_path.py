@@ -35,9 +35,9 @@ class GaussianConditionalProbabilityPath(ConditionalProbabilityPath):
         outputs:
             x: samples from p_t(x|z), (num_samples, dim)
         """
-        alpha_t = self.alpha(t)
-        beta_t = self.beta(t)
-        eps = torch.randn_like(z)
+        alpha_t = self.alpha(t).to(device=z.device)
+        beta_t = self.beta(t).to(device=z.device)
+        eps = torch.randn_like(z).to(device=z.device)
         return alpha_t * z + beta_t * eps
 
     def conditional_vector_field(
@@ -60,7 +60,6 @@ class GaussianConditionalProbabilityPath(ConditionalProbabilityPath):
         alpha_dt = self.alpha.dt(t)
         beta_dt = self.beta.dt(t)
         mean = alpha_t * z
-        # return alpha_dt * z + (beta_dt / beta_t) * (x - mean)
         return alpha_dt * z + (beta_dt / beta_t) * (x - mean)
 
     def conditional_score(

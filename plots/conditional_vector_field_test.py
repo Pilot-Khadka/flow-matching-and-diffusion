@@ -57,7 +57,10 @@ def imshow_density(
     density = density.log_density(xy).reshape(bins, bins).T
     im = ax.imshow(
         # pyrefly: ignore [bad-argument-type, missing-attribute]
-        density.cpu(), extent=[x_min, x_max, y_min, y_max], origin="lower", **kwargs
+        density.cpu(),
+        extent=[x_min, x_max, y_min, y_max],
+        origin="lower",
+        **kwargs,
     )
 
 
