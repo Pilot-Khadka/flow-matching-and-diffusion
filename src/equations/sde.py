@@ -7,8 +7,8 @@ class SDE(ABC):
     @abstractmethod
     def drift_coefficient(self, xt: Tensor, t: Tensor) -> Tensor:
         """
-        description:
-            Returns the drift coefficient of the SDE.
+        Returns the drift coefficient of the SDE.
+
         inputs:
             xt: state at time t, shape (batch_size, dim)
             t: time, shape ()
@@ -20,8 +20,8 @@ class SDE(ABC):
     @abstractmethod
     def diffusion_coefficient(self, xt: Tensor, t: Tensor) -> Tensor:
         """
-        description:
-            Returns the diffusion coefficient of the SDE.
+        Returns the diffusion coefficient of the SDE.
+
         inputs:
             xt: state at time t, shape (batch_size, dim)
             t: time, shape ()
